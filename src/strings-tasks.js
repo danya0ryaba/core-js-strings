@@ -146,8 +146,12 @@ function repeatString(str, times) {
  *   removeFirstOccurrences('I like legends', 'end') => 'I like legs'.
  *   removeFirstOccurrences('ABABAB', 'BA') => 'ABAB'.
  */
-function removeFirstOccurrences(/* str, value */) {
-  throw new Error('Not implemented');
+function removeFirstOccurrences(str, value) {
+  const index = str.indexOf(value);
+  if (index === -1) {
+    return str;
+  }
+  return str.slice(0, index) + str.slice(index + value.length);
 }
 
 /**
@@ -325,8 +329,20 @@ function countVowels(str) {
  *   isPalindrome('apple') => false
  *   isPalindrome('No lemon, no melon') => true
  */
-function isPalindrome(/* str */) {
-  throw new Error('Not implemented');
+function isPalindrome(str) {
+  let newStr = '';
+  const letters = 'abcdefghijklmnopqrstuvwxyz';
+  for (let i = 0; i < str.length; i += 1) {
+    if (letters.includes(str[i].toLowerCase())) {
+      newStr += str[i].toLowerCase();
+    }
+  }
+  for (let k = 0; k < newStr.length; k += 1) {
+    if (newStr[k] !== newStr[newStr.length - k - 1]) {
+      return false;
+    }
+  }
+  return true;
 }
 
 /**
@@ -472,8 +488,26 @@ function extractEmails(str) {
  *    => 'NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm'
  *
  */
-function encodeToRot13(/* str */) {
-  throw new Error('Not implemented');
+function encodeToRot13(str) {
+  const lettersLower = 'abcdefghijklmnopqrstuvwxyz';
+  const lettersUpper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  let result = '';
+  for (let i = 0; i < str.length; i += 1) {
+    const currentLetter = str[i];
+    if (
+      !lettersLower.includes(currentLetter) &&
+      !lettersUpper.includes(currentLetter)
+    ) {
+      result += currentLetter;
+    } else if (lettersLower.indexOf(currentLetter) !== -1) {
+      const offset = (lettersLower.indexOf(currentLetter) + 13) % 26;
+      result += lettersLower[offset];
+    } else {
+      const offset = (lettersUpper.indexOf(currentLetter) + 13) % 26;
+      result += lettersUpper[offset];
+    }
+  }
+  return result;
 }
 
 /**
@@ -500,8 +534,82 @@ function encodeToRot13(/* str */) {
  *   'Q♠' => 50
  *   'K♠' => 51
  */
-function getCardId(/* value */) {
-  throw new Error('Not implemented');
+function getCardId(value) {
+  let playId = -1;
+  const deckCards = [
+    'A♣',
+    '2♣',
+    '3♣',
+    '4♣',
+    '5♣',
+    '6♣',
+    '7♣',
+    '8♣',
+    '9♣',
+    '10♣',
+    'J♣',
+    'Q♣',
+    'K♣',
+    'A♦',
+    '2♦',
+    '3♦',
+    '4♦',
+    '5♦',
+    '6♦',
+    '7♦',
+    '8♦',
+    '9♦',
+    '10♦',
+    'J♦',
+    'Q♦',
+    'K♦',
+    'A♥',
+    '2♥',
+    '3♥',
+    '4♥',
+    '5♥',
+    '6♥',
+    '7♥',
+    '8♥',
+    '9♥',
+    '10♥',
+    'J♥',
+    'Q♥',
+    'K♥',
+    'A♠',
+    '2♠',
+    '3♠',
+    '4♠',
+    '5♠',
+    '6♠',
+    '7♠',
+    '8♠',
+    '9♠',
+    '10♠',
+    'J♠',
+    'Q♠',
+    'K♠',
+  ];
+  let myCard = value.split('');
+  if (myCard.length > 2) {
+    myCard = [value.split('').pop()];
+    myCard = [String(10), ...myCard];
+  }
+  for (let i = 0; i < deckCards.length; i += 1) {
+    if (deckCards[i].length > 2) {
+      const currentCardLatElement = deckCards[i].split('').pop();
+      const currentCard = [
+        String(deckCards[i][0]) + String(deckCards[i][1]),
+        currentCardLatElement,
+      ];
+      if (currentCard[0] === myCard[0] && currentCard[1] === myCard[1]) {
+        playId = i;
+      }
+    } else if (deckCards[i][0] === myCard[0] && deckCards[i][1] === myCard[1]) {
+      playId = i;
+    }
+  }
+  return playId;
 }
 
 module.exports = {
